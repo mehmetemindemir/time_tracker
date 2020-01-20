@@ -8,10 +8,17 @@ class PlatformExceptionAlertDialog extends PlatformAlertDialog {
       :super(title: title, content:_message(exception) ,defualtActionText: 'OK');
 
   static String _message(PlatformException exception) {
+    //if(exception.message=='FIRFirestoreErrorDomain'){
+    //  if(exception.code=='Error 7'){
+    //    return 'Missing or insufficient permissions.'  ;
+    //  }
+   // }
+    print(exception);
     return _errors[exception.code] ?? exception.message;
   }
 
   static Map<String, String> _errors = {
+    'Error 7':'Missing or insufficient permissions.'  ,
     'ERROR_WEAK_PASSWORD':'If the password is not strong enough.',
     'ERROR_INVALID_CREDENTIAL':'If the email address is malformed.' ,
     'ERROR_EMAIL_ALREADY_IN_USE':'If the email is already in use by a different account.',

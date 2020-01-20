@@ -1,15 +1,18 @@
 import 'package:flutter/cupertino.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-abstract class Database{
-  Future<void> createJob(Map<String,dynamic> jsonData);
+import 'package:time_tracker/app/home/models/job.dart';
+import 'package:time_tracker/services/api_path.dart';
+import 'package:time_tracker/services/firestore_service.dart';
+
+abstract class Database {
+  Future<void> createJob(Job job);
+  Stream<List<Job>> jobsStram();
 }
+
 class FirestoreDatabase implements Database {
-  FirestoreDatabase({@required this.uid}):assert(null!=uid);
+  FirestoreDatabase({@required this.uid}) : assert(null != uid);
   final String uid;
-  Future<void> createJob(Map<String,dynamic> jsonData) async {
-    final path='users/$uid/jobs/job_abc';
-    final documentReference=Firestore.instance.document(path);
-    await documentReference.setData(jsonData);
-  }
+  final _service=FirestoreService.instance;
+  Future<void> createJob(Job job) async => _service.setData(path: APIPath.job(uid, 'job_abc'), data: job.toMap());
+  Stream<List<Job>> jobsStram()=>_service.collectionStream(path: APIPath.jobs(uid), builder: (data)=>Job.fromMap(data));
 
 }
